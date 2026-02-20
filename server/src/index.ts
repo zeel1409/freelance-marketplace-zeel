@@ -11,7 +11,7 @@ dotenv.config();
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const PORT = parseInt(process.env.PORT || '3001', 10);
+const PORT = parseInt(process.env.PORT || '8080', 10);
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.error('Please set SUPABASE_URL and SUPABASE_SERVICE_KEY in .env');
@@ -407,5 +407,5 @@ app.put('/api/profiles/me', authenticate, async (req: AuthenticatedRequest, res:
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
