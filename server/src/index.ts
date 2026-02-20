@@ -11,7 +11,7 @@ dotenv.config();
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.error('Please set SUPABASE_URL and SUPABASE_SERVICE_KEY in .env');
