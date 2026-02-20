@@ -1,5 +1,5 @@
 // Centralized API client — all requests go through the backend
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const getToken = (): string | null => localStorage.getItem('freelancehub_token');
 
