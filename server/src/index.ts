@@ -406,6 +406,6 @@ app.put('/api/profiles/me', authenticate, async (req: AuthenticatedRequest, res:
   res.json({ profile: profilesArray[0] });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
