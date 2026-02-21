@@ -1,5 +1,14 @@
 // Centralized API client — all requests go through the backend
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+// VITE_API_URL should point to the server (e.g. https://api.example.com/api).
+// In production you must set this variable; otherwise the client will
+// try to contact localhost which is unreachable from deployed frontends.
+let API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+if (!import.meta.env.VITE_API_URL) {
+    // give a helpful console warning during development/runtime
+    console.warn('VITE_API_URL is not defined; defaulting to', API_BASE);
+}
+// remove trailing slash if present to keep consistency when concatenating
+API_BASE = API_BASE.replace(/\/+$/, '');
 
 const getToken = (): string | null => localStorage.getItem('freelancehub_token');
 
@@ -20,18 +29,35 @@ async function request<T>(
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_BASE}${path}`, {
-        ...options,
-        headers,
-    });
+    // wrap fetch in try/catch to provide a clearer error when the
+    // network request itself fails (e.g. wrong API_BASE, CORS issue,
+    // server down, etc.). The original implementation would surface
+    // a vague "Failed to fetch" message which made debugging difficult.
+    try {
+        const response = await fetch(`${API_BASE}${path}`, {
+            ...options,
+            headers,
+            // include credentials if backend is expecting cookies
+            credentials: 'include',
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
-        throw new Error(data.error || `Request failed with status ${response.status}`);
+        if (!response.ok) {
+            throw new Error(data.error || `Request failed with status ${response.status}`);
+        }
+
+        return data as T;
+    } catch (err) {
+        if (err instanceof TypeError) {
+            // typically network error or CORS failure
+            throw new Error(
+                'Network error: could not reach API server. ' +
+                'Verify VITE_API_URL and that the backend is running and accessible.'
+            );
+        }
+        throw err;
     }
-
-    return data as T;
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
