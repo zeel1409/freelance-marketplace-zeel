@@ -115,7 +115,16 @@ async function authenticate(req: AuthenticatedRequest, res: Response, next: Next
 }
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:8080",
+    "https://freelance-marketplace-zeel.netlify.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
 app.use(express.json());
 
 // --- auth routes ---
