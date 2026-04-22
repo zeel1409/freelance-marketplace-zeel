@@ -120,7 +120,8 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "http://localhost:8080",
-    "https://freelance-marketplace-zeel.netlify.app"
+    "https://freelance-marketplace-zeel.netlify.app",
+    "https://freelance-marketplace-zeel.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
